@@ -1,4 +1,5 @@
 <?php
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
@@ -480,7 +481,7 @@ class MunicipiosSeeder extends Seeder
             ['codigo' => 4287, 'nome' => 'Vitoria das Missoes', 'uf' => 'RS'],
             ['codigo' => 4288, 'nome' => 'Xangri-la', 'uf' => 'RS']
         ];
-        
-        \App\Municipio::insert($municipios);
+
+        \App\Models\Municipio::insert($municipios);
     }
 }

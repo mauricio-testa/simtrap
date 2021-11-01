@@ -1,4 +1,5 @@
 <?php
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
@@ -13,15 +14,15 @@ class UsersSeeder extends Seeder
     {
         $users = [
             [
-                'id' => 1, 
-                'name' => 'King', 
-                'email' => 'mauriciotesta97@gmail.com', 
+                'id' => 1,
+                'name' => 'King',
+                'email' => 'mauriciotesta97@gmail.com',
                 'password' => '$2y$10$BMy8cxW4iW1BRkpTy/H4puczglrC3YusDv4PUua9ljdxlCMYA8xS2', // 123456
-                'id_unidade' => 1, 
+                'id_unidade' => 1,
                 'remember_token' => null,
                 'level' => -1
-            ] 
+            ]
         ];
-        \App\User::insert($users);
+        \App\Models\User::insert($users);
     }
 }

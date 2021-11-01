@@ -12,8 +12,8 @@
             </v-col>
             <v-col cols="12" md="4">
                 <v-form @submit.prevent="search()">
-                <v-text-field 
-                    v-model="searchWord" 
+                <v-text-field
+                    v-model="searchWord"
                     :prepend-icon="'mdi-magnify'"
                     @click:clear="resetSearch()"
                     :hint="'Digite sua busca e tecle Enter!'"
@@ -23,7 +23,7 @@
                 </v-text-field>
                 </v-form>
             </v-col>
-            </v-row>                        
+            </v-row>
         </v-card-title>
 
         <!-- table  -->
@@ -77,29 +77,29 @@
                         <v-container>
                             <v-row>
                                 <v-col cols="12" sm="12" md="12">
-                                <v-text-field 
-                                    v-model="selectedItem.nome" 
-                                    label="Nome" 
-                                    required 
+                                <v-text-field
+                                    v-model="selectedItem.nome"
+                                    label="Nome"
+                                    required
                                     :rules="[v => !!v || 'Nome é obrigatório']"
                                 ></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="12" md="6">
-                                <v-text-field 
-                                    v-model="selectedItem.telefone" 
+                                <v-text-field
+                                    v-model="selectedItem.telefone"
                                     label="Telefone"
-                                    v-mask="['(##) ####-####', '(##) #####-####']" 
-                                    :rules="[v => (v ? (v.length > 13) : !v) || 'Telefone deve ter 10 ou 11 números']" 
+                                    v-mask="['(##) ####-####', '(##) #####-####']"
+                                    :rules="[v => (v ? (v.length > 13) : !v) || 'Telefone deve ter 10 ou 11 números']"
                                 ></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="12" md="6">
-                                <v-text-field 
-                                    v-model="selectedItem.access_key" 
+                                <v-text-field
+                                    v-model="selectedItem.access_key"
                                     label="Chave de Acesso"
                                     type="number"
-                                    :rules="[v => (v ? (v > 1000) : !v) || 'Deve ter no mínimo 4 dígitos']" 
+                                    :rules="[v => (v ? (v > 1000) : !v) || 'Deve ter no mínimo 4 dígitos']"
                                     hint="Será utilizada para lançamento da lista de presença. Se você não preencher, será gerada automaticamente"
                                 ></v-text-field>
                                 </v-col>
@@ -120,14 +120,14 @@
 
 <script>
 
-    import {TheMask} from 'vue-the-mask'
+    import { mask } from 'vue-the-mask'
 
     export default {
-    
-        components: {TheMask},
+
+        directives: { mask },
 
         data: () => ({
-            
+
             // main data
             motoristas: [],
             api: window.__routes.api.motorista,
@@ -158,7 +158,7 @@
                 totalItems: 0,
                 perPage: 0,
             },
-            
+
             // CRUD variables
             selectedIndex: null,
             selectedItem: {
@@ -180,7 +180,7 @@
 
         },
 
-        methods: { 
+        methods: {
 
         getItems: function() {
 
@@ -200,7 +200,7 @@
                     vm.pagination.total       = response.data.last_page;
                     vm.pagination.totalItems  = response.data.total;
                     vm.pagination.perPage     = response.data.per_page;
-                    
+
                 })
                 .catch(function(error) {
                     vm.$toast.error('Erro ao buscar motoristas')
@@ -218,7 +218,7 @@
                 if (!this.$refs.formEdit.validate()) return;
                 let vm = this;
                 vm.loading.edit = true;
-                
+
                 if (this.selectedIndex > -1) {
                 axios
                     .put(this.api+'/'+this.selectedItem.id, vm.selectedItem)
@@ -266,7 +266,7 @@
             */
 
             deleteItem: function (item, confirm) {
-                
+
                 if (!confirm) {
                     this.selectedItem = item;
                     this.selectedIndex = this.motoristas.indexOf(item);

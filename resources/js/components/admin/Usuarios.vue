@@ -11,7 +11,7 @@
                                 <v-icon dark @click="addNew">mdi-plus</v-icon>
                             </v-btn>
                         </v-col>
-                    </v-row>                        
+                    </v-row>
                 </v-card-title>
                 <v-card-text>
                     <v-data-table
@@ -61,9 +61,9 @@
                 <v-card>
                     <v-card-title class="headline">Resetar senha</v-card-title>
                     <v-card-text>
-                        <v-text-field 
-                            v-model="newPassword" 
-                            :label="'Nova Senha para '+selectedItem.name" 
+                        <v-text-field
+                            v-model="newPassword"
+                            :label="'Nova Senha para '+selectedItem.name"
                             required
                             type="password"
                             :rules="[v => !!v || 'Senha é obrigatória']"
@@ -90,27 +90,27 @@
                             <v-alert type="warning" v-if="selectedItem.level == -1">
                                 Este usuário tem nível máximo de permissão!
                             </v-alert>
-                            <v-text-field 
-                                v-model="selectedItem.name" 
-                                label="Nome" 
-                                required 
+                            <v-text-field
+                                v-model="selectedItem.name"
+                                label="Nome"
+                                required
                                 :rules="[v => !!v || 'Nome é obrigatório']"
                             ></v-text-field>
-                            <v-text-field 
-                                v-model="selectedItem.email" 
+                            <v-text-field
+                                v-model="selectedItem.email"
                                 label="Email"
-                                type="email" 
-                                required 
+                                type="email"
+                                required
                                 :rules="[v => !!v || 'Email é obrigatório']"
                             ></v-text-field>
-                            <v-text-field 
+                            <v-text-field
                                 v-if="selectedIndex == -1"
-                                v-model="selectedItem.password" 
+                                v-model="selectedItem.password"
                                 label="Senha"
-                                type="password" 
+                                type="password"
                                 :rules="[v => !!v || 'Senha é obrigatório!']"
                             ></v-text-field>
-                            <v-switch 
+                            <v-switch
                                 v-model="selectedItem.status"
                                 :label="selectedItem.status == '1' ? 'Ativo' : 'Inativo'"
                             ></v-switch>
@@ -129,11 +129,8 @@
 </template>
 
 <script>
-
-    import {TheMask} from 'vue-the-mask'
-
     export default {
-    
+
         props: {
             dialogUsers: {
                 type: Boolean,
@@ -183,7 +180,7 @@
             newPassword: null,
         }),
 
-        methods: { 
+        methods: {
 
             initialize () {
 
@@ -210,7 +207,7 @@
                 if (!this.$refs.formEdit.validate()) return;
                 let vm = this;
                 vm.loading.edit = true;
-                
+
                 if (this.selectedIndex > -1) {
                     axios
                     .put(this.api+'/'+this.selectedItem.id, vm.selectedItem)
@@ -250,7 +247,7 @@
             },
 
             deleteItem: function (item, confirm) {
-                
+
                 if (!confirm) {
                     this.selectedItem = item;
                     this.selectedIndex = this.usuarios.indexOf(item);

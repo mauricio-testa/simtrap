@@ -23,7 +23,7 @@ class ChamadaController extends Controller
         }
     }
 
-    public function authenticate (Request $request) {
+    public function autenticar (Request $request) {
 
         $query = Viagem::select()
             ->leftJoin('motoristas', 'motoristas.id','=','viagens.id_motorista')

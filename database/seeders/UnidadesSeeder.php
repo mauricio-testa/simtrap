@@ -1,4 +1,5 @@
 <?php
+namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
@@ -14,6 +15,6 @@ class UnidadesSeeder extends Seeder
         $unidades = [
             ['id' => 1, 'id_municipio' => 4040, 'descricao' => 'Unidade Teste']
         ];
-        \App\Unidade::insert($unidades);
+        \App\Models\Unidade::insert($unidades);
     }
 }

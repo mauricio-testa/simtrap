@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\UsuarioController;
 use App\Http\Controllers\Api\VeiculoController;
 use App\Http\Controllers\Api\ViagemController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\External\ChamadaController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\Report\ReportController;
 
@@ -63,12 +64,10 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-//Route::any('chamada/{viagem}', 'External\ChamadaController@index')->where('viagem', '[0-9]+');
-//Route::post('chamada/authenticate/{viagem}', 'External\ChamadaController@authenticate')->where('viagem', '[0-9]+');
-
-//Auth::routes();
+Route::any('chamada/{viagem}', [ChamadaController::class, 'index'])->where('viagem', '[0-9]+');
+Route::post('chamada/authenticate/{viagem}', [ChamadaController::class, 'autenticar'])->where('viagem', '[0-9]+');
 
 
 Route::view('/login', 'auth/login')->name('login');
 Route::post('/login', [LoginController::class, 'login']);
-Route::get('/logout', [LoginController::class], 'logout')->name('logout');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');

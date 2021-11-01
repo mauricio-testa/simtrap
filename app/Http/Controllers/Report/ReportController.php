@@ -6,15 +6,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\ViewLista;
-use App\Viagem;
-use App\Unidade;
-use App\Lista;
-use App\Paciente;
-use App\ViewViagem;
-use App\Motorista;
-use App\Municipio;
-use App\Veiculo;
+use App\Models\ViewLista;
+use App\Models\Viagem;
+use App\Models\Unidade;
+use App\Models\Lista;
+use App\Models\Paciente;
+use App\Models\ViewViagem;
+use App\Models\Motorista;
+use App\Models\Municipio;
+use App\Models\Veiculo;
 
 class ReportController extends Controller
 {
@@ -31,7 +31,7 @@ class ReportController extends Controller
         }
 
         return view('report.lista', [
-            'lista'     => $lista, 
+            'lista'     => $lista,
             'viagem'    => $viagem,
             'unidade'   => $unidade,
             'chamada'   => url("/chamada/$request->viagem"),
@@ -89,9 +89,9 @@ class ReportController extends Controller
 
         foreach ($query as $key => $value) {
             array_push($data, [
-                $value->id, 
-                $value->data_formated, 
-                $value->municipio_nome, 
+                $value->id,
+                $value->data_formated,
+                $value->municipio_nome,
                 $value->veiculo,
                 $value->motorista_nome,
             ]);
@@ -116,10 +116,10 @@ class ReportController extends Controller
 
         $query = Lista::select(
                 'vw_viagem.id',
-                'vw_viagem.veiculo_nome', 
-                'vw_viagem.municipio_nome', 
+                'vw_viagem.veiculo_nome',
+                'vw_viagem.municipio_nome',
                 'vw_viagem.data_formated',
-                'lista.consulta_local', 
+                'lista.consulta_local',
                 'lista.consulta_observacao',
                 'lista.consulta_hora',
                 'lista.compareceu'
@@ -143,9 +143,9 @@ class ReportController extends Controller
 
         foreach ($query as $key => $value) {
             array_push($data, [
-                $value->id, 
-                $value->data_formated, 
-                $value->municipio_nome, 
+                $value->id,
+                $value->data_formated,
+                $value->municipio_nome,
                 $value->veiculo_nome,
                 $value->consulta_local,
                 $value->consulta_observacao,
@@ -183,9 +183,9 @@ class ReportController extends Controller
             'vw_viagem.id',
             'vw_viagem.veiculo_nome',
             'vw_viagem.motorista_nome',
-            'vw_viagem.municipio_nome', 
+            'vw_viagem.municipio_nome',
             'vw_viagem.data_formated',
-            'lista.consulta_local', 
+            'lista.consulta_local',
             'lista.consulta_observacao',
             'lista.compareceu',
             'pacientes.nome'
@@ -204,10 +204,10 @@ class ReportController extends Controller
 
         foreach ($query as $key => $value) {
             array_push($data, [
-                $value->id, 
+                $value->id,
                 $value->nome,
-                $value->data_formated, 
-                $value->municipio_nome, 
+                $value->data_formated,
+                $value->municipio_nome,
                 $value->veiculo_nome,
                 $value->motorista_nome,
                 // $value->consulta_local,

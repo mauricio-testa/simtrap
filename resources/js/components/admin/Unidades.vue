@@ -10,7 +10,7 @@
                 <v-icon dark>mdi-plus</v-icon>
                 </v-btn>
             </v-col>
-            </v-row>                        
+            </v-row>
         </v-card-title>
 
         <!-- table  -->
@@ -58,10 +58,10 @@
                     </v-card-title>
                     <v-card-text>
                         <v-container>
-                            <v-text-field 
-                                v-model="selectedItem.descricao" 
-                                label="Descrição" 
-                                required 
+                            <v-text-field
+                                v-model="selectedItem.descricao"
+                                label="Descrição"
+                                required
                                 :rules="[v => !!v || 'Descrição é obrigatório']"
                             ></v-text-field>
                             <v-autocomplete
@@ -73,11 +73,11 @@
                                 label="Município da Unidade"
                                 :rules="[v => !!v || 'Município é obrigatório']"
                             ></v-autocomplete>
-                            <v-text-field 
-                                v-model="selectedItem.responsavel" 
-                                label="Responsável" 
+                            <v-text-field
+                                v-model="selectedItem.responsavel"
+                                label="Responsável"
                             ></v-text-field>
-                            <v-switch 
+                            <v-switch
                                 v-model="selectedItem.status"
                                 :label="selectedItem.status == '1' ? 'Ativo' : 'Inativo'"
                             ></v-switch>
@@ -100,14 +100,14 @@
 
 <script>
 
-    import {TheMask} from 'vue-the-mask'
+    import { mask } from 'vue-the-mask'
 
     export default {
-    
-        components: {TheMask},
+
+        directives: { mask },
 
         data: () => ({
-            
+
             // main data
             unidades: [],
             api: window.__routes.api.unidade,
@@ -134,7 +134,7 @@
                 { text: 'Data Criação', value: 'created_at'},
                 { text: 'Ações', value: 'action'},
             ],
-            
+
             // CRUD variables
             selectedIndex: null,
             selectedItem: {
@@ -155,7 +155,7 @@
 
         },
 
-        methods: { 
+        methods: {
 
             updateLookup (datasetName, dataArray) {
                 this.lookupMunicipios = dataArray;
@@ -189,7 +189,7 @@
                 if (!this.$refs.formEdit.validate()) return;
                 let vm = this;
                 vm.loading.edit = true;
-                
+
                 if (this.selectedIndex > -1) {
                 axios
                     .put(this.api+'/'+this.selectedItem.id, vm.selectedItem)
@@ -236,7 +236,7 @@
             */
 
             deleteItem: function (item, confirm) {
-                
+
                 if (!confirm) {
                     this.selectedItem = item;
                     this.selectedIndex = this.unidades.indexOf(item);

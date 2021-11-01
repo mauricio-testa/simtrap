@@ -12,8 +12,8 @@
             </v-col>
             <v-col cols="12" md="4">
                 <v-form @submit.prevent="search()">
-                <v-text-field 
-                    v-model="searchWord" 
+                <v-text-field
+                    v-model="searchWord"
                     :prepend-icon="'mdi-magnify'"
                     @click:clear="resetSearch()"
                     :hint="'Digite sua busca e tecle Enter!'"
@@ -23,7 +23,7 @@
                 </v-text-field>
                 </v-form>
             </v-col>
-            </v-row>                        
+            </v-row>
         </v-card-title>
 
         <!-- table  -->
@@ -70,7 +70,7 @@
             </v-card-actions>
         </v-card>
         </v-dialog>
-    
+
         <!-- dialog edit / new -->
         <v-dialog v-model="dialogEdit" max-width="500px">
             <v-form v-model="formValid" ref="formEdit">
@@ -78,7 +78,7 @@
                     <v-card-title>
                         <span class="headline">Paciente</span>
                         <v-spacer></v-spacer>
-                        <v-switch 
+                        <v-switch
                             class="pr-4"
                             v-model="selectedItem.status"
                             :label="selectedItem.status == '1' ? 'Ativo' : 'Inativo'"
@@ -88,18 +88,18 @@
                         <v-container>
                             <v-row>
                                 <v-col cols="12" sm="12" md="6">
-                                <v-text-field 
-                                    v-model="selectedItem.nome" 
-                                    label="Nome" 
-                                    required 
+                                <v-text-field
+                                    v-model="selectedItem.nome"
+                                    label="Nome"
+                                    required
                                     :rules="[v => !!v || 'Nome é obrigatório']"
                                     prepend-icon="mdi-account"
                                 ></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="12" md="6">
-                                <v-text-field 
+                                <v-text-field
                                     v-model="selectedItem.rg"
-                                    :rules="[v => (v ? (v.length >= 7 && v.length <= 10) : !v) || 'Deve ter 7 a 10 caracteres!']" 
+                                    :rules="[v => (v ? (v.length >= 7 && v.length <= 10) : !v) || 'Deve ter 7 a 10 caracteres!']"
                                     label="RG"
                                     prepend-icon="mdi-account-details"
                                 ></v-text-field>
@@ -107,29 +107,29 @@
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="12" md="6">
-                                <v-text-field 
-                                    v-mask="['(##) ####-####', '(##) #####-####']" 
-                                    v-model="selectedItem.telefone" 
-                                    :rules="[v => (v ? (v.length > 13) : !v) || 'Telefone deve ter 10 ou 11 números']" 
+                                <v-text-field
+                                    v-mask="['(##) ####-####', '(##) #####-####']"
+                                    v-model="selectedItem.telefone"
+                                    :rules="[v => (v ? (v.length > 13) : !v) || 'Telefone deve ter 10 ou 11 números']"
                                     label="Telefone"
                                     prepend-icon="mdi-phone"
                                 ></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="12" md="6">
-                                <v-text-field 
+                                <v-text-field
                                     type="number"
-                                    v-model="selectedItem.sus" 
+                                    v-model="selectedItem.sus"
                                     :rules="[v => (v ? (v < 999999999999999) : !v) || 'SUS deve ter até 15 algarismos']"
-                                    label="Cartão SUS" 
+                                    label="Cartão SUS"
                                     prepend-icon="mdi-account-details-outline"
                                 ></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="12" md="12">
-                                <v-text-field 
-                                    v-model="selectedItem.endereco" 
-                                    label="Endereço" 
+                                <v-text-field
+                                    v-model="selectedItem.endereco"
+                                    label="Endereço"
                                     prepend-icon="mdi-map-marker"
                                 ></v-text-field>
                                 </v-col>
@@ -150,14 +150,14 @@
 
 <script>
 
-    import {TheMask} from 'vue-the-mask'
+    import { mask } from 'vue-the-mask'
 
     export default {
-    
-        components: {TheMask},
+
+        directives: { mask },
 
         data: () => ({
-            
+
             // main data
             pacientes: [],
             api: window.__routes.api.paciente,
@@ -190,7 +190,7 @@
                 totalItems: 0,
                 perPage: 0,
             },
-            
+
             // CRUD variables
             selectedIndex: null,
             selectedItem: {
@@ -238,7 +238,7 @@
                         vm.pagination.total       = response.data.last_page;
                         vm.pagination.totalItems  = response.data.total;
                         vm.pagination.perPage     = response.data.per_page;
-                        
+
                     })
                     .catch(function(error) {
                         vm.$toast.error('Erro ao buscar pacientes')
@@ -259,7 +259,7 @@
 
                 if (vm.selectedItem.rg != null)
                 vm.selectedItem.rg = vm.selectedItem.rg.toUpperCase();
-                
+
                 if (this.selectedIndex > -1) {
                 axios
                     .put(this.api+'/'+this.selectedItem.id, vm.selectedItem)
@@ -310,7 +310,7 @@
             */
 
             deleteItem: function (item, confirm) {
-                
+
                 if (!confirm) {
                     this.selectedItem = item;
                     this.selectedIndex = this.pacientes.indexOf(item);

@@ -2,9 +2,9 @@
 
 @section('content')
 
-<chamada 
-    :lista="{{ htmlspecialchars(json_encode($lista))}}" 
-    :viagem="{{ htmlspecialchars(json_encode($viagem))}}"
+<chamada
+    :lista="{{ json_encode($lista) }}"
+    :viagem="{{ json_encode($viagem) }}"
     :authenticated="{{$authenticated}}"
 ></chamada>
 
