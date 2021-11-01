@@ -1,20 +1,6 @@
-
-require('./bootstrap');
-
 import Vue from 'vue'
-import Vuetify from 'vuetify';
-import VuetifyToast from 'vuetify-toast-snackbar'
-
-Vue.use(Vuetify);
-Vue.use(VuetifyToast, {
-  color: 'info',
-  iconColor: 'transparent' ,
-  showClose: true,
-  closeIcon: 'mdi-close',
-  timeout: 5000,
-  x: 'center',
-  y: 'bottom',
-})
+import './bootstrap';
+import vuetify from './plugins/vuetify'
 
 // global
 Vue.component('navigation', require('./components/global/Navigation.vue').default);
@@ -79,15 +65,5 @@ Vue.prototype.$openPopup = function (url, title) {
 
 const app = new Vue({
   el: '#app',
-  vuetify: new Vuetify({
-    theme: {
-      themes: {
-        light: {
-          primary: '#17234e',
-          secondary: '#0b51c5',
-          accent: '#0091EA'
-        },
-      },
-    },
-  }),
+  vuetify
 });
