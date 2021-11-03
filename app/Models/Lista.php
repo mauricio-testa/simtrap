@@ -15,6 +15,16 @@ class Lista extends Model
         'id_paciente','id_viagem', 'acompanhante_rg', 'acompanhante_nome', 'consulta_local', 'consulta_observacao', 'consulta_hora'
     ];
 
+    public function viagem()
+    {
+        return $this->belongsTo(Viagem::class, 'id_viagem', 'id');
+    }
+
+    public function paciente()
+    {
+        return $this->belongsTo(Paciente::class, 'id_paciente', 'id');
+    }
+
     public static function getViagemList($id_viagem) {
         return self::select ('lista.*', 'pa.nome as paciente_nome')
             ->leftJoin('pacientes as pa', 'pa.id', '=','lista.id_paciente')

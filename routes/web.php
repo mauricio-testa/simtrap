@@ -13,7 +13,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\External\ChamadaController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\Report\ReportController;
-
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\Admin;
 
@@ -71,3 +71,8 @@ Route::post('chamada/authenticate/{viagem}', [ChamadaController::class, 'autenti
 Route::view('/login', 'auth/login')->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::prefix('testes')->group(function(){
+    Route::get('relacoes', [TestController::class, 'relacoes']);
+});
+

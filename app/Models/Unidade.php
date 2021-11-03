@@ -9,6 +9,31 @@ class Unidade extends Model
 {
     public $timestamps = false;
 
+    public function veiculos()
+    {
+        return $this->hasMany(Veiculo::class, 'id_unidade');
+    }
+
+    public function motoristas()
+    {
+        return $this->hasMany(Motorista::class, 'id_unidade');
+    }
+
+    public function usuarios()
+    {
+        return $this->hasMany(User::class, 'id_unidade');
+    }
+
+    public function viagens()
+    {
+        return $this->hasMany(Viagem::class, 'id_unidade');
+    }
+
+    public function pacientes()
+    {
+        return $this->hasMany(Paciente::class, 'id_unidade');
+    }
+
     protected $fillable = [
         'descricao', 'id_municipio', 'status', 'responsavel'
     ];

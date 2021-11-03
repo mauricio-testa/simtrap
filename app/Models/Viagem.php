@@ -20,6 +20,36 @@ class Viagem extends Model
         'data_viagem' => 'datetime:d-m-Y',
     ];
 
+    public function lista()
+    {
+        return $this->hasMany(Lista::class, 'id_viagem', 'id');
+    }
+
+    public function pacientes()
+    {
+        return $this->belongsToMany(Paciente::class, 'lista', 'id_viagem', 'id_paciente');
+    }
+
+    public function motorista()
+    {
+        return $this->belongsTo(Motorista::class, 'id_motorista', 'id');
+    }
+
+    public function destino()
+    {
+        return $this->belongsTo(Municipio::class, 'cod_destino', 'codigo');
+    }
+
+    public function veiculo()
+    {
+        return $this->belongsTo(Veiculo::class, 'id_veiculo', 'id');
+    }
+
+    public function unidade()
+    {
+        return $this->belongsTo(Unidade::class, 'id_unidade', 'id');
+    }
+
     public static function getViagem ($id_unidade = null, $wheres = [], $onlyFirst = false) {
 
         // initialize query

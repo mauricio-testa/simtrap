@@ -11,4 +11,14 @@ class Motorista extends Model
     protected $fillable = [
         'nome', 'telefone', 'id_unidade', 'access_key',
     ];
+
+    public function viagens()
+    {
+        return $this->hasMany(Viagem::class, 'id_motorista');
+    }
+
+    public function unidade()
+    {
+        return $this->belongsTo(Unidade::class, 'id_unidade');
+    }
 }
