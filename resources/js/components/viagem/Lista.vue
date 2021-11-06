@@ -25,7 +25,7 @@
                     </v-btn>
 
                 </v-col>
-                </v-row>                        
+                </v-row>
             </v-card-title>
             <v-card-text>
                 <div class="d-flex mt-2 mb-8 pr-8">
@@ -39,8 +39,8 @@
                     </v-chip>
                     <v-chip class="mr-2" color="primary" outlined :title="viagem.veiculo_nome">
                         <v-icon left>mdi-car</v-icon>
-                        {{viagem.veiculo_nome | substring}} 
-                    </v-chip>                    
+                        {{viagem.veiculo_nome | substring}}
+                    </v-chip>
                     <v-chip v-if="vagasDisponiveis > 0" class="mr-2" color="success" outlined>
                         <v-icon left>mdi-account-group</v-icon>
                         {{ vagasDisponiveis }} vagas
@@ -62,6 +62,9 @@
                     loading-text="Buscando dados..."
                     :loading="loading.list"
                 >
+                    <template v-slot:item.paciente="{ item }">
+                        {{ item.paciente.nome }}
+                    </template>
                     <template v-slot:item.acompanhante_nome="{ item }">
                         <span v-text="item.acompanhante_nome != null ? 'SIM' : 'NÃO'"></span>
                     </template>
@@ -112,14 +115,14 @@
                             </template>
                         </v-autocomplete>
 
-                        <v-text-field 
-                            label="Local da Consulta" 
+                        <v-text-field
+                            label="Local da Consulta"
                             v-model="selectedPassageiro.consulta_local"
                             :rules="[v => !!v || 'Local é obrigatório']"
                         ></v-text-field>
-                        <v-text-field 
+                        <v-text-field
                             type="time"
-                            label="Horário da consulta" 
+                            label="Horário da consulta"
                             v-model="selectedPassageiro.consulta_hora"
                         ></v-text-field>
                         <v-text-field label="Observação do Paciente" v-model="selectedPassageiro.consulta_observacao"></v-text-field>
@@ -128,7 +131,7 @@
                         <v-tooltip right v-if="!precisaAcompanhanteOriginal && vagasDisponiveis == 0">
                             <template v-slot:activator="{ on }">
                                 <div v-on="on" style="display: inline-block">
-                                    <v-switch 
+                                    <v-switch
                                         v-model="precisaAcompanhante"
                                         label="Precisa acompanhante?"
                                         disabled
@@ -137,23 +140,23 @@
                             </template>
                             <span>Você não pode adicionar<br> acompanhante a este paciente <br>porque o veículo já está lotado!</span>
                         </v-tooltip>
-                        <v-switch 
+                        <v-switch
                             v-else
                             v-model="precisaAcompanhante"
                             label="Precisa acompanhante?"
                         ></v-switch>
 
-                        <v-text-field 
-                            v-if="precisaAcompanhante" 
-                            v-model="selectedPassageiro.acompanhante_nome" 
+                        <v-text-field
+                            v-if="precisaAcompanhante"
+                            v-model="selectedPassageiro.acompanhante_nome"
                             label="Nome do acompanhante"
                             :rules="[v => !!v && precisaAcompanhante || 'Informe o nome do acompanhante']"
                         ></v-text-field>
-                        <v-text-field 
-                            v-if="precisaAcompanhante" 
-                            v-model="selectedPassageiro.acompanhante_rg" 
+                        <v-text-field
+                            v-if="precisaAcompanhante"
+                            v-model="selectedPassageiro.acompanhante_rg"
                             label="RG do acompanhante"
-                            :rules="[v => (v ? (v.length >= 7 && v.length <= 10) : !v) || 'RG deve ter 7 a 10 dígitos!']" 
+                            :rules="[v => (v ? (v.length >= 7 && v.length <= 10) : !v) || 'RG deve ter 7 a 10 dígitos!']"
                         ></v-text-field>
                     </v-container>
                 </v-card-text>
@@ -170,7 +173,7 @@
     <v-dialog v-model="dialogDeletePassageiro" max-width="290">
         <v-card>
             <v-card-title class="headline">Confirmar exclusão?</v-card-title>
-            <v-card-text>Tem certeza que deseja deletar o passageiro {{selectedPassageiro.paciente_nome}} dessa lista?</v-card-text>
+            <v-card-text>Tem certeza que deseja deletar o passageiro {{selectedPassageiro.paciente.nome}} dessa lista?</v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="dialogDeletePassageiro = false">Cancelar</v-btn>
@@ -178,7 +181,7 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <lookup 
+    <lookup
         ref="lookupComponentLista"
         v-on:updateLookup="updateLookup"
     ></lookup>
@@ -187,7 +190,7 @@
 <script>
 
     export default {
-    
+
         props: {
             dialogList: {
                 type: Boolean,
@@ -208,7 +211,7 @@
 
             // table column names
             headers: [
-                { text: 'Paciente', value: 'paciente_nome'},
+                { text: 'Paciente', value: 'paciente'},
                 { text: 'Local', value: 'consulta_local'},
                 { text: 'Hora', value: 'consulta_hora'},
                 { text: 'Acompanhante', value: 'acompanhante_nome'},
@@ -241,6 +244,10 @@
                 consulta_local: null,
                 consulta_hora: null,
                 consulta_observacao: null,
+                paciente: {
+                    id: null,
+                    nome: '',
+                }
             },
             defaultPassageiro: {
                 id_paciente: null,
@@ -250,11 +257,15 @@
                 consulta_local: null,
                 consulta_hora: null,
                 consulta_observacao: null,
+                paciente: {
+                    id: null,
+                    nome: '',
+                }
             },
-        }),      
+        }),
 
-        methods: { 
-            
+        methods: {
+
             search () {
                 // pra não pesquisar se está disable
                 if (this.selectedPassageiroIndex > -1) return
@@ -285,22 +296,19 @@
             */
 
             deletePassageiro: function (item, confirm) {
-                
+
                 if (!confirm) {
                     this.selectedPassageiro = item;
                     this.selectedPassageiroIndex = this.lista.indexOf(item);
                     this.dialogDeletePassageiro = true
                     return;
                 }
-                
+
                 let vm = this;
                 vm.loading.delete = true;
 
                 axios
-                    .delete(vm.api+'/'+vm.selectedPassageiro.id_paciente, {
-                        data: {"viagem": vm.selectedPassageiro.id_viagem}, 
-                        headers: {"Authorization": "***"}}
-                    )
+                    .delete(vm.api+'/'+vm.selectedPassageiro.id)
                     .then(function(response){
                         if(response.data.error) {
                             vm.$toast.error('Erro ao deletar: '+response.data.error)
@@ -329,13 +337,13 @@
 
                 // validação regras do formulário
                 if (!this.$refs.formEditPassageiro.validate()) return;
-                
+
                 let vm = this;
                 vm.loading.edit = true;
 
                 if (vm.selectedPassageiroIndex > -1) {
                     axios
-                    .put(vm.api+'/'+this.viagem.id, vm.selectedPassageiro)
+                    .put(vm.api+'/'+this.selectedPassageiro.id, vm.selectedPassageiro)
                     .then(function(response){
                         if(response.data.error) {
                             vm.$toast.error('Erro ao editar: '+response.data.error)
@@ -416,7 +424,7 @@
                 // variavel pra nao permitir ativação de acompanhante se a lista está cheia
                 this.precisaAcompanhanteOriginal = this.precisaAcompanhante;
                 this.resetPassageiroEditValidation();
-                this.lookupPacientes.push({id: item.id_paciente, nome: item.paciente_nome})
+                this.lookupPacientes.push({id: item.id_paciente, nome: item.paciente.nome})
                 this.dialogEditPassageiro = true;
             },
 
@@ -445,7 +453,7 @@
 
         computed: {
             vagasDisponiveis () {
-                return this.viagem.lotacao - this.lista.reduce((total, element) => 
+                return this.viagem.lotacao - this.lista.reduce((total, element) =>
                     (element.acompanhante_nome != null ? total + 2 : total + 1), 0)
             }
         },

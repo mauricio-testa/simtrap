@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ViewViagem;
+use App\Observers\ViagemObserver;
 use Illuminate\Support\Facades\DB;
 
 class Viagem extends Model
@@ -50,6 +51,12 @@ class Viagem extends Model
         return $this->belongsTo(Unidade::class, 'id_unidade', 'id');
     }
 
+    public static function boot() {
+        parent::boot();
+
+        Viagem::observe(ViagemObserver::class);
+    }
+
     public static function getViagem ($id_unidade = null, $wheres = [], $onlyFirst = false) {
 
         // initialize query
@@ -76,14 +83,11 @@ class Viagem extends Model
 
     public static function canUpdateVeiculoTo($newVeiculo, $idViagem) {
 
-        $query = self::select('viagens.id',
-                DB::raw("(SELECT count(*) FROM lista WHERE id_viagem = $idViagem) AS passageiros"),
-                DB::raw("(SELECT count(*) FROM lista WHERE id_viagem = $idViagem AND acompanhante_nome IS NOT NULL) AS acompanhantes"),
-                DB::raw("(SELECT lotacao FROM veiculos WHERE id = $newVeiculo) AS lotacao"));
+        $passageiros = Lista::where('id_viagem', $idViagem)->count();
+        $acompanhantes = Lista::where('id_viagem', $idViagem)->whereNotNull('acompanhante_nome')->count();
+        $newLotacao = Veiculo::find($newVeiculo)->lotacao;
 
-        $result = $query->first();
-
-        return $result->lotacao >= ($result->passageiros + $result->acompanhantes);
+        return $newLotacao >= ($passageiros + $acompanhantes);
 
     }
 }

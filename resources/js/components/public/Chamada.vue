@@ -38,10 +38,10 @@
                                 required
                             />
                             <v-btn
-                                class="mt-6" 
-                                color="primary" 
-                                x-large block tile  
-                                @click="authenticate" 
+                                class="mt-6"
+                                color="primary"
+                                x-large block tile
+                                @click="authenticate"
                                 :loading="loading">
                                 Enviar
                             </v-btn>
@@ -57,21 +57,24 @@
                 <!-- chamada -->
                 <v-card-text v-else-if="step == 'AUTENTICADO'">
                     <v-alert outlined type="info" :icon="false">Marque os pacientes que compareceram na viagem</v-alert>
-                    <v-data-table 
+                    <v-data-table
                         :mobile-breakpoint="10"
                         v-model="selected"
                         :headers="headers"
                         :items="lista"
-                        item-key="id_paciente"
+                        item-key="id"
                         show-select
                         hide-default-footer
                     >
+                        <template v-slot:item.paciente="{ item }">
+                            {{ item.paciente.nome }}
+                        </template>
                     </v-data-table>
                     <v-btn
-                        class="mt-6" 
-                        color="primary" 
-                        x-large block tile  
-                        @click="submitChamada" 
+                        class="mt-6"
+                        color="primary"
+                        x-large block tile
+                        @click="submitChamada"
                         :loading="loading">
                         Enviar
                     </v-btn>
@@ -82,7 +85,7 @@
                     <v-icon color="success" size="60">mdi-checkbox-marked-circle-outline</v-icon>
                     <span class="title mt-2 text-center">Obrigado</span>
                 </v-card-text>
-                
+
             </v-card>
         </div>
     </v-container>
@@ -105,7 +108,7 @@
         authError: null,
         loading: false,
         headers: [
-          { text: 'Nome', value: 'paciente_nome' },
+          { text: 'Nome', value: 'paciente' },
         ],
     }),
 
@@ -134,7 +137,7 @@
                 this.step = 'NAO_AUTENTICADO'
             }
         },
-         
+
         authenticate () {
             let vm = this;
             vm.loading = true;
@@ -155,8 +158,10 @@
         submitChamada () {
             let vm = this;
             vm.loading = true;
+
+            const compareceram = vm.selected.map(passageiro => passageiro.id)
             axios
-                .post(window.location.href, {lista: JSON.stringify(vm.selected)})
+                .post(window.location.href, {lista: compareceram})
                 .then(function(response){
                     vm.step = 'CONCLUIDO';
                 })

@@ -14,6 +14,7 @@ class CreateListasTable extends Migration
     public function up()
     {
         Schema::create('lista', function (Blueprint $table) {
+            $table->increments('id');
             $table->unsignedInteger('id_paciente');
             $table->unsignedInteger('id_viagem');
             $table->decimal('acompanhante_rg', 10, 0)->nullable();
@@ -25,8 +26,6 @@ class CreateListasTable extends Migration
 
             $table->foreign('id_paciente')->references('id')->on('pacientes');
             $table->foreign('id_viagem')->references('id')->on('viagens')->onDelete('cascade');;
-
-            $table->primary(['id_paciente', 'id_viagem']);
 
             $table->engine = 'InnoDB';
             $table->charset = 'utf8';

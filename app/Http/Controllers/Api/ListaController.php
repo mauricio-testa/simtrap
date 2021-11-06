@@ -11,12 +11,10 @@ use App\Http\Controllers\Helpers\Log;
 
 class ListaController extends Controller
 {
-    protected $table = 'lista';
-
     public function index(Request $request)
     {
         try {
-            return Lista::getViagemList($request->viagem);
+            return Lista::where('id_viagem', $request->viagem)->with('paciente')->get();
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => ErrorInterpreter::getMessage($th)
@@ -30,7 +28,6 @@ class ListaController extends Controller
         try {
             $passageiro = $request->all();
             Lista::create($passageiro);
-            Log::CRUDInsert($this->table, $passageiro['id_viagem'], "Passageiro inserido na lista", $passageiro);
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => ErrorInterpreter::getMessage($th, ['23000' => ['1062' => 'Este passageiro já está nessa lista']])
@@ -43,9 +40,8 @@ class ListaController extends Controller
         try {
             $data = $request->all();
             unset($data['paciente_nome']);
-            $passageiro = Lista::where('id_viagem', $id)->where('id_paciente', $request->id_paciente);
+            $passageiro = Lista::find($id);
             $passageiro->update($data);
-            Log::CRUDUpdate($this->table, $data['id_viagem'], "Atualização de passageiro na lista", $data);
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => ErrorInterpreter::getMessage($th)
@@ -56,8 +52,7 @@ class ListaController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $passageiro = Lista::where('id_viagem', $request->viagem)->where('id_paciente', $id);
-            Log::CRUDDelete($this->table, $id, "Passageiro removido da lista", $passageiro->first()->toArray());
+            $passageiro = Lista::find($id);
             $passageiro->delete();
         } catch (\Throwable $th) {
             return response()->json([

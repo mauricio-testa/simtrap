@@ -5,6 +5,7 @@ namespace App\Http\Controllers\External;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Lista;
+use App\Models\Motorista;
 use App\Models\Viagem;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +15,7 @@ class ChamadaController extends Controller
         if ($request->isMethod('post')) {
             $this->updateAbsenteism($request->viagem, $request->lista);
         } else {
-            $passageiros = Lista::getViagemList($request->viagem);
+            $passageiros = Lista::where('id_viagem', $request->viagem)->with('paciente')->get();
             return view('external.chamada', [
                 'lista'         => $passageiros,
                 'viagem'        => Viagem::where('id', $request->viagem)->first(),
@@ -25,12 +26,9 @@ class ChamadaController extends Controller
 
     public function autenticar (Request $request) {
 
-        $query = Viagem::select()
-            ->leftJoin('motoristas', 'motoristas.id','=','viagens.id_motorista')
-            ->where('motoristas.access_key', $request->access_key)
-            ->where('viagens.id', $request->viagem)->count();
+        $motorista = Viagem::find($request->viagem)->motorista;
 
-        if ($query == 1) {
+        if ($motorista->access_key == $request->access_key) {
             return response()->json(
                 ['success' => 'true']
             );
@@ -44,17 +42,11 @@ class ChamadaController extends Controller
 
     private function updateAbsenteism ($viagem, $compareceram) {
 
-        $lista = json_decode($compareceram);
-
         // atualiza tudo para nao
         Lista::where('id_viagem', $viagem)->update(['compareceu' => 'NAO']);
 
         // os que vieram no array é porque compareceram
-        foreach ($lista as $key => $value) {
-            Lista::where('id_viagem', $value->id_viagem)
-                ->where('id_paciente', $value->id_paciente)
-                ->update(['compareceu' => 'SIM']);;
-        }
+        Lista::whereIn('id', $compareceram)->update(['compareceu' => 'SIM']);
 
         // atualizar viagem como concluida
         Viagem::where('id', $viagem)->update(['status' => 'CONCLUIDA']);

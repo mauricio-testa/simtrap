@@ -19,7 +19,7 @@
                     <v-icon class="mr-2" @click="resetSearch()">mdi-close</v-icon>
                     </v-form>
                 </v-col>
-                </v-row>                        
+                </v-row>
             </v-card-title>
 
             <v-row>
@@ -41,7 +41,7 @@
                         <template v-slot:item.level="{ item }">
                             <v-chip dark small :class="getChipClass(item.level)">{{item.level}}</v-chip>
                         </template>
-                        
+
                         <template v-slot:item.see="{ item }">
                             <v-icon outlined @click="explanation(item)" :class="{'blue--text': item.id == selectedItem.id}">mdi-eye</v-icon>
                         </template>
@@ -68,13 +68,14 @@
                     </v-chip-group>
                     <v-divider></v-divider>
                     <div class="subtitle-2 my-3"> {{ selectedItem.message }} </div>
-                    <code class="pa-4 pr-8">
-                        <span>{{selectedItem.payload | format}}</span>
-                    </code>
-                    
+                    <div class="grey lighten-3 pa-4 pr-8">
+                        <code class="transparent">
+                            {{selectedItem.payload | formatJson }}
+                        </code>
+                    </div>
                 </v-col>
             </v-row>
-        
+
     </v-card>
     </div>
 </template>
@@ -82,9 +83,9 @@
 <script>
 
     export default {
-    
+
         data: () => ({
-            
+
             // main data
             logs: [],
             api: window.__routes.api.log,
@@ -117,7 +118,7 @@
 
             // table column names
             headers: [
-                { text: '#', value: 'id'},
+                { text: '#', value: 'context_id'},
                 { text: 'Contexto', value: 'context'},
                 { text: 'Level', value: 'level'},
                 { text: 'Ação', value: 'action'},
@@ -209,12 +210,9 @@
             },
         },
         filters: {
-            format (json) {
+            formatJson (json) {
                 if (!json) return;
-                let openKey = json.replace(/{/g,'{\n   ');
-                let closeKey = openKey.replace(/}/g,'\n  }');
-                let wrap = closeKey.replace(/,/g,', \n  ');
-                return wrap;
+                return json;
             }
         }
     }

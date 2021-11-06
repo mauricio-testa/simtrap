@@ -224,12 +224,12 @@
                     .put(this.api+'/'+this.selectedItem.id, vm.selectedItem)
                     .then(function(response){
                         if(response.data.error) {
-                        vm.$toast.error('Erro ao editar: '+response.data.error)
+                            vm.$toast.error('Erro ao editar: '+response.data.error)
                         }
                         else {
-                        Object.assign(vm.motoristas[vm.selectedIndex], vm.selectedItem)
-                        vm.$toast.success('Motorista salvo com sucesso!')
-                        vm.dialogEdit = false;
+                            vm.getItems();
+                            vm.$toast.success('Motorista salvo com sucesso!')
+                            vm.dialogEdit = false;
                         }
                     })
                     .finally(() => {vm.loading.edit = false;});

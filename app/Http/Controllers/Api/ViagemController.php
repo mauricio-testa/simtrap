@@ -12,8 +12,6 @@ use App\Http\Controllers\Helpers\Log;
 
 class ViagemController extends Controller
 {
-    protected $table = 'viagens';
-
     public function index(Request $request)
     {
         try {
@@ -43,13 +41,13 @@ class ViagemController extends Controller
     {
         try {
 
-            $viagem = $request->all();
-            $viagem['id_unidade'] = Auth::user()->id_unidade;
-            $last_id = Viagem::insertGetId($viagem);
-            Log::CRUDInsert($this->table, $last_id, "Viagem inserida", $viagem);
+            $data = $request->all();
+            $data['id_unidade'] = Auth::user()->id_unidade;
+
+            $viagem = Viagem::create($data);
 
             // retorna o id inserido para abrir automaticamente modal de lista
-            return response()->json(['id' => $last_id]);
+            return response()->json(['id' => $viagem->id]);
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -70,7 +68,6 @@ class ViagemController extends Controller
             throw new \Exception("Este veículo não tem vagas suficientes para o número de passageiros cadastrados nesta lista!");
 
             $viagem->update($request->all());
-            Log::CRUDUpdate($this->table, $id, "Viagem alterada", $viagem);
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -83,7 +80,6 @@ class ViagemController extends Controller
     {
         try {
             $viagem = Viagem::findOrFail($id);
-            Log::CRUDDelete($this->table, $id, "Viagem deletada", $viagem->toArray());
             $viagem->delete();
         } catch (\Throwable $th) {
             return response()->json([

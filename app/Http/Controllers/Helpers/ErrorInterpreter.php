@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Helpers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Helpers\Log;
+use App\Models\Log;
 
 class ErrorInterpreter extends Controller
 {
@@ -20,12 +20,12 @@ class ErrorInterpreter extends Controller
             ]
         ];
 
-        Log::Exception($message, $previous);
+        Log::add(Log::LEVEL_EXCEPTION, null, Log::LEVEL_EXCEPTION, null, $message, $previous);
 
         if (empty($previous)) return $message;
 
         $errorInfo = $previous->errorInfo;
-        
+
         if (!empty($errorInfo[1])) {
             $errorCode  = $errorInfo[1];
             $sqlState   = $errorInfo[0];
@@ -37,15 +37,13 @@ class ErrorInterpreter extends Controller
                 }
             }
 
-            
-            
             // se não encontrar, busca nas mensagens de erro deste método
             if (array_key_exists($sqlState, $errorList)) {
                 if (array_key_exists($errorCode, $errorList[$sqlState])) {
                     return $errorList[$sqlState][$errorCode];
                 }
             }
-            
+
         }
 
         return $message;

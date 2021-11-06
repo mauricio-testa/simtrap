@@ -51,9 +51,10 @@ class MotoristaController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            $data = $request->all();
+            $data['access_key'] = $this->validateAccessKey($data['access_key']);
             $motorista = Motorista::findOrFail($id);
-            $motorista->access_key = $this->validateAccessKey($motorista->access_key);
-            $motorista->update($request->all());
+            $motorista->update($data);
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => ErrorInterpreter::getMessage($th)

@@ -3,8 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\ViewLista;
-
+use App\Observers\ListaObserver;
 class Lista extends Model
 {
     protected $table = 'lista';
@@ -25,10 +24,9 @@ class Lista extends Model
         return $this->belongsTo(Paciente::class, 'id_paciente', 'id');
     }
 
-    public static function getViagemList($id_viagem) {
-        return self::select ('lista.*', 'pa.nome as paciente_nome')
-            ->leftJoin('pacientes as pa', 'pa.id', '=','lista.id_paciente')
-            ->where('lista.id_viagem', $id_viagem)
-            ->get();
+    public static function boot() {
+        parent::boot();
+
+        Lista::observe(ListaObserver::class);
     }
 }
