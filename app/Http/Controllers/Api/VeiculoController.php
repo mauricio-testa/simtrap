@@ -15,8 +15,8 @@ class VeiculoController extends Controller
     public function index(Request $request)
     {
         try {
+            $query = Veiculo::whereBelongsTo(Auth::user()->unidade);
 
-            $query = Veiculo::where('id_unidade', '=', Auth::user()->id_unidade);
             $limit = config('constants.PAGINATION_SIZE');
 
             if(!empty($request->search))

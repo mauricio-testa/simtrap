@@ -14,9 +14,7 @@ class UnidadeController extends Controller
     public function index()
     {
         try {
-            $query = Unidade::select('*','mu.nome as municipio_nome')
-            ->leftJoin('municipios as mu', 'unidades.id_municipio','=','mu.codigo');
-            return $query->get();
+            return Unidade::with('municipio')->get();
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => ErrorInterpreter::getMessage($th)

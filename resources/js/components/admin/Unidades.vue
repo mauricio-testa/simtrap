@@ -26,6 +26,9 @@
                 <v-icon v-if="item.status == '1'" color="success">mdi-check</v-icon>
                 <v-icon v-else color="error">mdi-close</v-icon>
             </template>
+            <template v-slot:item.municipio="{ item }">
+                {{ item.municipio.nome }} - {{ item.municipio.uf }}
+            </template>
             <!-- table actions -->
             <template v-slot:item.action="{ item }">
                 <v-icon class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
@@ -129,7 +132,7 @@
             headers: [
                 { text: '#', value: 'id'},
                 { text: 'Descrição', value: 'descricao'},
-                { text: 'Município', value: 'municipio_nome'},
+                { text: 'Município', value: 'municipio'},
                 { text: 'Active', value: 'status'},
                 { text: 'Data Criação', value: 'created_at'},
                 { text: 'Ações', value: 'action'},
@@ -198,7 +201,7 @@
                             vm.$toast.error('Erro ao editar: '+response.data.error)
                         }
                         else {
-                            Object.assign(vm.unidades[vm.selectedIndex], vm.selectedItem)
+                            vm.getItems()
                             vm.$toast.success('Unidade salva com sucesso!')
                             vm.dialogEdit = false;
                         }

@@ -9,6 +9,10 @@ class Unidade extends Model
 {
     public $timestamps = false;
 
+    protected $fillable = [
+        'descricao', 'id_municipio', 'status', 'responsavel'
+    ];
+
     public function veiculos()
     {
         return $this->hasMany(Veiculo::class, 'id_unidade');
@@ -34,9 +38,10 @@ class Unidade extends Model
         return $this->hasMany(Paciente::class, 'id_unidade');
     }
 
-    protected $fillable = [
-        'descricao', 'id_municipio', 'status', 'responsavel'
-    ];
+    public function municipio()
+    {
+        return $this->belongsTo(Municipio::class, 'id_municipio');
+    }
 
     public static function UnidadeIsActiveByUserEmail($email) {
 
