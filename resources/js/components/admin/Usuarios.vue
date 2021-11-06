@@ -189,7 +189,7 @@
                 let vm = this;
 
                 axios
-                    .get(vm.api)
+                    .get(`${vm.api}/?unidade=${vm.unidade.id}`)
                     .then(function(response) {
                         vm.usuarios = response.data
                     })

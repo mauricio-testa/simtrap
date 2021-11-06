@@ -18,10 +18,10 @@ class UsuarioController extends Controller
         $this->middleware(Admin::class)->except(['update']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            return Auth::user()->unidade->users;
+            return User::where('id_unidade', $request->unidade)->get();
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => ErrorInterpreter::getMessage($th)
@@ -35,7 +35,7 @@ class UsuarioController extends Controller
         try {
             $usuario = $request->all();
             $usuario['password'] = bcrypt($usuario['password']);
-            Auth::user()->unidade->users()->create($usuario);
+            User::create($usuario);
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => ErrorInterpreter::getMessage($th)
