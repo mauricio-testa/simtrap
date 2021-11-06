@@ -16,7 +16,7 @@ class MotoristaController extends Controller
     {
         try {
 
-            $query = Motorista::where('id_unidade', '=', Auth::user()->id_unidade);
+            $query = Motorista::whereBelongsTo(Auth::user()->unidade);
             $limit = config('constants.PAGINATION_SIZE');
 
             if(!empty($request->search))
@@ -40,8 +40,7 @@ class MotoristaController extends Controller
         try {
             $motorista = $request->all();
             $motorista['access_key'] = $this->validateAccessKey($motorista['access_key']);
-            $motorista['id_unidade'] = Auth::user()->id_unidade;
-            Motorista::create($motorista);
+            Auth::user()->unidade->motoristas()->create($motorista);
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => ErrorInterpreter::getMessage($th)

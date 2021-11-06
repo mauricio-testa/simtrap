@@ -18,10 +18,10 @@ class UsuarioController extends Controller
         $this->middleware(Admin::class)->except(['update']);
     }
 
-    public function index(Request $request)
+    public function index()
     {
         try {
-            return User::where('id_unidade', $request->unidade)->get();
+            return Auth::user()->unidade->users;
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => ErrorInterpreter::getMessage($th)
@@ -35,7 +35,7 @@ class UsuarioController extends Controller
         try {
             $usuario = $request->all();
             $usuario['password'] = bcrypt($usuario['password']);
-            User::create($usuario);
+            Auth::user()->unidade->users()->create($usuario);
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => ErrorInterpreter::getMessage($th)
@@ -65,11 +65,11 @@ class UsuarioController extends Controller
     public function destroy($id)
     {
         try {
-            if ($id == Auth::user()->id_unidade){
+            if ($id == Auth::user()->id){
                 throw new \Exception("Você não pode se deletar né");
             }
-            $unidade = User::findOrFail($id);
-            $unidade->delete();
+            $user = User::findOrFail($id);
+            $user->delete();
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => ErrorInterpreter::getMessage($th)

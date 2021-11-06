@@ -14,13 +14,13 @@ class PacienteController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Paciente::where('id_unidade', Auth::user()->id_unidade);
+            $query = Paciente::whereBelongsTo(Auth::user()->unidade);
 
             if(!empty($request->search))
             $query->where('nome', 'like', '%'.$request->search.'%');
 
             if($request->only_active)
-            $query->where('status', 1);
+            $query->actives();
 
             return $query->paginate(config('constants.PAGINATION_SIZE'));
 
@@ -35,10 +35,10 @@ class PacienteController extends Controller
     public function store(Request $request)
     {
         try {
-            $municipio_unidade = Unidade::where('id', Auth::user()->id_unidade)->first();
+            $user = Auth::user();
             $paciente = $request->all();
-            $paciente['id_unidade'] = Auth::user()->id_unidade;
-            $paciente['codigo_municipio'] = $municipio_unidade->id_municipio;
+            $paciente['id_unidade'] = $user->id_unidade;
+            $paciente['codigo_municipio'] = $user->unidade->id_municipio;
             Paciente::create($paciente);
         } catch (\Throwable $th) {
             return response()->json([

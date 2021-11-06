@@ -43,6 +43,11 @@ class Unidade extends Model
         return $this->belongsTo(Municipio::class, 'id_municipio');
     }
 
+    public function users()
+    {
+        return $this->hasMany(User::class, 'id_unidade');
+    }
+
     public static function UnidadeIsActiveByUserEmail($email) {
 
         $select = DB::table('unidades')
